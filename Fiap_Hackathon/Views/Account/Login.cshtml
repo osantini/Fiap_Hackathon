@@ -1,0 +1,34 @@
+﻿@model SistemaHackathon.Models.LoginViewModel
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login - Sistema Hackathon</title>
+    <link href="~/css/geral.css" rel="stylesheet" /> <!-- Referência ao arquivo CSS externo -->
+</head>
+<body>
+    <div class="login-container">
+        <h1>Sistema Hackathon</h1>
+
+        @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+        {
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                @Html.TextBoxFor(m => m.Email, new { @type = "email", @class = "form-control", @placeholder = "Digite seu e-mail" })
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Digite sua senha" })
+            </div>
+
+            <button type="submit" class="btn-login">Entrar</button>
+
+            <a href="@Url.Action("ForgotPassword", "Account")" class="link">Esqueci minha senha</a>
+            <a href="@Url.Action("Cadastro", "Account")" class="link">Cadastre-se</a>
+        }
+    </div>
+</body>
+</html>

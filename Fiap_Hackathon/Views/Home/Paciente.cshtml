@@ -1,0 +1,54 @@
+﻿@model IEnumerable<SistemaHackathon.Models.ConsultaViewModel>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Paciente - Sistema Hackathon</title>
+    <link href="~/Content/geral.css" rel="stylesheet" /> <!-- Usando o mesmo CSS para manter o estilo -->
+</head>
+<body>
+    <div class="login-container">
+        <h1>Consultas Agendadas</h1>
+
+        <div class="new-consulta">
+            <a href="@Url.Action("AgendarConsulta", "Paciente")" class="btn-login">Agendar Nova Consulta</a>
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <table class="consulta-grid">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Local</th>
+                        <th>Procedimento</th>
+                        <th>Médico</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var consulta in Model)
+                    {
+                        <tr>
+                            <td>@consulta.Data.ToString("dd/MM/yyyy")</td>
+                            <td>@consulta.Local</td>
+                            <td>@consulta.Procedimento</td>
+                            <td>@consulta.Medico</td>
+                            <td>
+                                <a href="@Url.Action("CancelarConsulta", "Paciente", new { id = consulta.Id })" class="btn-acao">Cancelar</a>
+                                <a href="@Url.Action("ReagendarConsulta", "Paciente", new { id = consulta.Id })" class="btn-acao">Reagendar</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Nenhuma consulta agendada.</p>
+        }
+    </div>
+</body>
+</html>

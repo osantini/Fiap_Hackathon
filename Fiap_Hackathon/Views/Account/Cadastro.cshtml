@@ -1,0 +1,68 @@
+﻿@model SistemaHackathon.Models.CadastroViewModel
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cadastro - Sistema Hackathon</title>
+    <link href="~/css/geral.css" rel="stylesheet" /> <!-- Usando o mesmo CSS da tela de login -->
+    <script>
+        function toggleMedicoFields() {
+            var tipo = document.getElementById("tipo").value;
+            var medicoFields = document.getElementById("medicoFields");
+            if (tipo === "Médico") {
+                medicoFields.style.display = "block";
+            } else {
+                medicoFields.style.display = "none";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Cadastro - Sistema Hackathon</h1>
+
+        @using (Html.BeginForm("Cadastro", "Account", FormMethod.Post))
+        {
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                @Html.TextBoxFor(m => m.Nome, new { @class = "form-control", @placeholder = "Digite seu nome" })
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                @Html.TextBoxFor(m => m.Email, new { @type = "email", @class = "form-control", @placeholder = "Digite seu e-mail" })
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                @Html.PasswordFor(m => m.Senha, new { @class = "form-control", @placeholder = "Digite sua senha" })
+            </div>
+
+            <div class="form-group">
+                <label for="tipo">Tipo</label>
+                <select id="tipo" class="form-control" name="Tipo" onchange="toggleMedicoFields()">
+                    <option value="Paciente"></option>
+                    <option value="Paciente">Paciente</option>
+                    <option value="Médico">Médico</option>
+                </select>
+            </div>
+
+            <div id="medicoFields" style="display:none;">
+                <div class="form-group">
+                    <label for="especialidade">Especialidade</label>
+                    @Html.TextBoxFor(m => m.Especialidade, new { @class = "form-control", @placeholder = "Digite sua especialidade" })
+                </div>
+
+                <div class="form-group">
+                    <label for="crm">CRM</label>
+                    @Html.TextBoxFor(m => m.CRM, new { @class = "form-control", @placeholder = "Digite seu CRM" })
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login">Cadastrar</button>
+        }
+    </div>
+</body>
+</html>
