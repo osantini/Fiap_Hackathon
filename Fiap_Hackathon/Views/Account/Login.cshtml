@@ -1,4 +1,4 @@
-﻿@model SistemaHackathon.Models.LoginViewModel
+﻿@model Fiap_Hackathon.Models.LoginViewModel
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -11,6 +11,13 @@
 <body>
     <div class="login-container">
         <h1>Sistema Hackathon</h1>
+
+        @if (ViewBag.SuccessMessage != null)
+        {
+            <div class="alert alert-success">
+                @ViewBag.SuccessMessage
+            </div>
+        }
 
         @using (Html.BeginForm("Login", "Account", FormMethod.Post))
         {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SistemaHackathon.Models;
+using Fiap_Hackathon.Models;
 
 public class MedicoController : Controller
 {

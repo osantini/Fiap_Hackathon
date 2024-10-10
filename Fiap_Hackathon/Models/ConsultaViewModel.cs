@@ -1,4 +1,4 @@
-﻿namespace SistemaHackathon.Models
+﻿namespace Fiap_Hackathon.Models
 {
     public class ConsultaViewModel
     {
