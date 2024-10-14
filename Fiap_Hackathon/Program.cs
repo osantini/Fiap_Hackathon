@@ -13,6 +13,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Registrar os serviços
 builder.Services.AddScoped<CadastroService>();
 builder.Services.AddScoped<ValidationService>();
+builder.Services.AddScoped<LoginService>();
 
 builder.Services.AddScoped<CadastroRepository>();
 

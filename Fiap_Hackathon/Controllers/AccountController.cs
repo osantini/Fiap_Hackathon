@@ -1,35 +1,51 @@
 ﻿using Fiap_Hackathon.Services;
 using Microsoft.AspNetCore.Mvc;
 using Fiap_Hackathon.Models;
+using Fiap_Hackathon.Service;
 
 public class AccountController : Controller
 {
     private readonly CadastroService _cadastroService;
+    private readonly LoginService _loginService;
 
-    public AccountController(CadastroService cadastroService)
+    public AccountController(CadastroService cadastroService, LoginService loginService)
     {
         _cadastroService = cadastroService;
+        _loginService = loginService;
     }
 
     [HttpGet]
     public IActionResult Login()
     {
-        if (TempData["SuccessMessage"] != null)
+        if (TempData["ErrorMessage"] != null)
         {
-            ViewBag.SuccessMessage = TempData["SuccessMessage"].ToString();
+            ViewBag.ErrorMessage = TempData["ErrorMessage"].ToString();
         }
-
         return View();
     }
 
     [HttpPost]
-    public ActionResult Login(LoginViewModel model)
+    public async Task<IActionResult> Login(string email, string password)
     {
-        if (ModelState.IsValid)
+        var (success, errorMessage, usuario) = await _loginService.LoginAsync(email, password);
+
+        if (success)
         {
-            // Verificar login e redirecionar se bem-sucedido
+            if (usuario.Tipo == 1)
+            {
+                return RedirectToAction("Medico", "Home");
+            }
+            else if (usuario.Tipo == 0)
+            {
+                return RedirectToAction("Paciente", "Home");
+            }
         }
-        return View(model);
+        else
+        {
+            TempData["ErrorMessage"] = errorMessage;
+        }
+
+        return RedirectToAction("Login");
     }
 
     public ActionResult ForgotPassword()

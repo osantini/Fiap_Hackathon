@@ -6,6 +6,18 @@ namespace Fiap_Hackathon.Controllers
 {
     public class HomeController : Controller
     {
+        [HttpGet]
+        public IActionResult Paciente()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Medico()
+        {
+            return View();
+        }
+
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)

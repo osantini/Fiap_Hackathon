@@ -9,7 +9,7 @@
         public DateTime Data_Cadastro { get; set; }
         public int Tipo { get; set; }
         public int Ativo { get; set; }
-        public string Especialidade { get; set; } // Somente se for Médico
-        public string CRM { get; set; } // Somente se for Médico
+        public string? Especialidade { get; set; } // Somente se for Médico
+        public string? CRM { get; set; } // Somente se for Médico
     }
 }
