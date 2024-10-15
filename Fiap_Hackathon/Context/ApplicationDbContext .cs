@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Fiap_Hackathon.Models;
+﻿using Fiap_Hackathon.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Fiap_Hackathon.Context
 {
@@ -10,6 +10,8 @@ namespace Fiap_Hackathon.Context
         {
         }
 
-        public DbSet<Usuario> Usuarios { get; set; } // Tabela de Usuários
+        public DbSet<Usuario> Usuarios { get; set; } 
+        public DbSet<Clinica> Clinicas { get; set; }
+        public DbSet<Consulta> Consultas { get; set; }
     }
 }

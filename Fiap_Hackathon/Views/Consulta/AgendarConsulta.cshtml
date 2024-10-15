@@ -1,0 +1,45 @@
+﻿@model Fiap_Hackathon.Models.AgendarConsultaViewModel
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Agendar Consulta</title>
+    <link rel="stylesheet" href="~/css/geral.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Agendar Consulta</h1>
+
+        <form method="post" asp-action="AgendarConsulta" class="form-content">
+            <div class="form-group">
+                <label for="dataConsulta">Data da Consulta</label>
+                <input type="date" id="dataConsulta" class="form-control" name="DataConsulta" required />
+            </div>
+
+            <div class="form-group">
+                <label for="procedimento">Procedimento</label>
+                <select id="procedimento" class="form-control" name="Procedimento" required>
+                    <option value="">Selecione um procedimento</option>
+                    <option value="Consulta Clínica">Consulta Clínica</option>
+                    <option value="Exame de Rotina">Exame de Rotina</option>
+                    <option value="Retorno">Retorno</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="clinica">Clínica</label>
+                <select id="clinica" class="form-control" name="ClinicaId" required>
+                    <option value="">Selecione uma clínica</option>
+                    @foreach (var clinica in Model.ClinicasDisponiveis)
+                    {
+                        <option value="@clinica.Id">@clinica.Nome_Clinica</option>
+                    }
+                </select>
+            </div>
+
+                <button type="submit" class="btn-login">Agendar</button>
+        </form>
+    </div>
+</body>
+</html>

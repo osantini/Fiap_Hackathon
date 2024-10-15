@@ -14,6 +14,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<CadastroService>();
 builder.Services.AddScoped<ValidationService>();
 builder.Services.AddScoped<LoginService>();
+builder.Services.AddScoped<ClinicaService>();
+builder.Services.AddScoped<ConsultaService>();
 
 builder.Services.AddScoped<CadastroRepository>();
 
