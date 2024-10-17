@@ -12,6 +12,10 @@
     <div class="login-container">
         <h1>Consultas Agendadas</h1>
 
+        <div class="new-clinica">
+            <a href="@Url.Action("CadastrarClinica", "Clinica")" class="btn-login">Cadastrar Nova Clinica</a>
+        </div>
+
         @if (Model != null && Model.Any())
         {
             <table class="consulta-grid">

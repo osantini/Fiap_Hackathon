@@ -17,7 +17,7 @@ namespace Fiap_Hackathon.Controllers
         [HttpGet]
         public IActionResult CadastrarClinica()
         {
-            return View(new Clinica());
+            return View(new ClinicaViewModel());
         }
 
         [HttpPost]

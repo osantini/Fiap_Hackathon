@@ -1,0 +1,94 @@
+﻿@model Fiap_Hackathon.Models.ClinicaViewModel
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cadastro de Clínica</title>
+    <link href="~/css/geral.css" rel="stylesheet" />
+
+    <script>
+        async function buscarEndereco() {
+            const cep = document.getElementById("cep").value;
+            if (cep.length === 8) {
+                try {
+                    const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+                    const data = await response.json();
+
+                    if (!data.erro) {
+                        document.getElementById("logradouro").value = data.logradouro;
+                        document.getElementById("bairro").value = data.bairro;
+                        document.getElementById("cidade").value = data.localidade;
+                        document.getElementById("estado").value = data.uf;
+                    } else {
+                        alert("CEP não encontrado.");
+                    }
+                } catch (error) {
+                    console.error("Erro ao buscar o endereço:", error);
+                    alert("Erro ao buscar o endereço.");
+                }
+            } else {
+                alert("CEP inválido.");
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Cadastro de Clínica - Sistema Hackathon</h1>
+
+        @if (ViewData.ModelState.ErrorCount > 0)
+        {
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        @using (Html.BeginForm("CadastrarClinica", "Clinica", FormMethod.Post))
+        {
+            <div class="form-group">
+                <label for="nome">Nome da Clínica</label>
+                @Html.TextBoxFor(m => m.Nome, new { @class = "form-control", @placeholder = "Digite o nome da clínica" })
+            </div>
+
+            <div class="form-group">
+                <label for="cep">CEP</label>
+                <input id="cep" class="form-control" placeholder="Digite o CEP" onblur="buscarEndereco()" />
+            </div>
+
+            <div class="form-group">
+                <label for="logradouro">Logradouro</label>
+                <input id="logradouro" class="form-control" placeholder="Logradouro" disabled />
+            </div>
+
+            <div class="form-group">
+                <label for="numero">Número</label>
+                @Html.TextBoxFor(m => m.Numero, new { @class = "form-control", @placeholder = "Nº" })
+            </div>
+
+            <div class="form-group">
+                <label for="bairro">Bairro</label>
+                <input id="bairro" class="form-control" placeholder="Bairro" disabled />
+            </div>
+
+            <div class="form-group">
+                <label for="cidade">Cidade</label>
+                <input id="cidade" class="form-control" placeholder="Cidade" disabled />
+            </div>
+
+            <div class="form-group">
+                <label for="estado">Estado</label>
+                <input id="estado" class="form-control" placeholder="Estado" disabled />
+            </div>
+
+            <button type="submit" class="btn-login">Cadastrar Clínica</button>
+        }
+    </div>
+</body>
+</html>
