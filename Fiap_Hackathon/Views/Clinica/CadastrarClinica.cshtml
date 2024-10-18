@@ -17,10 +17,17 @@
                     const data = await response.json();
 
                     if (!data.erro) {
+                        // Preenche os campos visuais
                         document.getElementById("logradouro").value = data.logradouro;
                         document.getElementById("bairro").value = data.bairro;
                         document.getElementById("cidade").value = data.localidade;
                         document.getElementById("estado").value = data.uf;
+
+                        // Preenche os campos hidden que serão enviados ao Controller
+                        document.getElementById("hidden-logradouro").value = data.logradouro;
+                        document.getElementById("hidden-bairro").value = data.bairro;
+                        document.getElementById("hidden-cidade").value = data.localidade;
+                        document.getElementById("hidden-estado").value = data.uf;
                     } else {
                         alert("CEP não encontrado.");
                     }
@@ -59,12 +66,13 @@
 
             <div class="form-group">
                 <label for="cep">CEP</label>
-                <input id="cep" class="form-control" placeholder="Digite o CEP" onblur="buscarEndereco()" />
+                <input id="cep" name="CEP" class="form-control" placeholder="Digite o CEP" onblur="buscarEndereco()" />
             </div>
 
             <div class="form-group">
                 <label for="logradouro">Logradouro</label>
                 <input id="logradouro" class="form-control" placeholder="Logradouro" disabled />
+                @Html.HiddenFor(m => m.Logradouro, new { id = "hidden-logradouro" })
             </div>
 
             <div class="form-group">
@@ -75,16 +83,19 @@
             <div class="form-group">
                 <label for="bairro">Bairro</label>
                 <input id="bairro" class="form-control" placeholder="Bairro" disabled />
+                @Html.HiddenFor(m => m.Bairro, new { id = "hidden-bairro" })
             </div>
 
             <div class="form-group">
                 <label for="cidade">Cidade</label>
                 <input id="cidade" class="form-control" placeholder="Cidade" disabled />
+                @Html.HiddenFor(m => m.Cidade, new { id = "hidden-cidade" })
             </div>
 
             <div class="form-group">
                 <label for="estado">Estado</label>
                 <input id="estado" class="form-control" placeholder="Estado" disabled />
+                @Html.HiddenFor(m => m.Estado, new { id = "hidden-estado" })
             </div>
 
             <button type="submit" class="btn-login">Cadastrar Clínica</button>

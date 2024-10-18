@@ -12,19 +12,19 @@ namespace Fiap_Hackathon.Repositories
             _context = context;
         }
 
-        public async Task<bool> IncluirUsuario(Usuario usuario)
-        {
-            try
-            {
-                _context.Usuarios.Add(usuario); 
-                await _context.SaveChangesAsync(); 
-                return true;
-            }
-            catch
-            {
-                // Tratar erro conforme necessário
-                return false;
-            }
-        }
+        //public async Task<bool> IncluirUsuario(Usuario usuario)
+        //{
+        //    try
+        //    {
+        //        _context.Usuarios.Add(usuario); 
+        //        await _context.SaveChangesAsync(); 
+        //        return true;
+        //    }
+        //    catch
+        //    {
+        //        // Tratar erro conforme necessário
+        //        return false;
+        //    }
+        //}
     }
 }

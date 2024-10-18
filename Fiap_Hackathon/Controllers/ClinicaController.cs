@@ -1,6 +1,7 @@
 ﻿using Fiap_Hackathon.Context;
 using Fiap_Hackathon.Models;
 using Fiap_Hackathon.Service;
+using Fiap_Hackathon.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fiap_Hackathon.Controllers
@@ -21,20 +22,23 @@ namespace Fiap_Hackathon.Controllers
         }
 
         [HttpPost]
-        public IActionResult CadastrarClinica(Clinica clinica)
+        public async Task<IActionResult> CadastrarClinica(ClinicaViewModel clinica)
         {
-            if (ModelState.IsValid)
+            var (success, errors) = await _clinicaService.CadastrarClinica(clinica);
+
+            if (success)
             {
-                if (_clinicaService.CadastrarClinica(clinica, out string mensagemErro))
+                TempData["SuccessMessage"] = "Clinica cadastrada com sucesso!";
+                return RedirectToAction("Medico", "Home");
+            }
+            else
+            {
+                foreach (var error in errors)
                 {
-                    TempData["MensagemSucesso"] = "Clínica cadastrada com sucesso!";
-                    return RedirectToAction("CadastrarClinica");
-                }
-                else
-                {
-                    TempData["MensagemErro"] = mensagemErro;
+                    ModelState.AddModelError(string.Empty, error);
                 }
             }
+
             return View(clinica);
         }
     }

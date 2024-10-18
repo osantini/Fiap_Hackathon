@@ -29,6 +29,11 @@ namespace Fiap_Hackathon.Service
             return true;
         }
 
+        public async Task<bool> IsNameInUse(string nome)
+        {
+            return await _context.Clinicas.AnyAsync(u => u.Nome_Clinica == nome);
+        }
+
         // Método para validação geral de cadastro (pode incluir mais regras conforme necessário)
         public async Task<(bool isValid, List<string> errors)> ValidateUser(UsuarioViewModel usuario)
         {
@@ -58,6 +63,19 @@ namespace Fiap_Hackathon.Service
                 {
                     errors.Add("O CRM é obrigatório para médicos.");
                 }
+            }
+
+            return (errors.Count == 0, errors);
+        }
+
+        public async Task<(bool isValid, List<string> errors)> ValidateClinica(ClinicaViewModel clinica)
+        {
+            var errors = new List<string>();
+
+            // Verifica se o email já está em uso
+            if (await IsNameInUse(clinica.Nome))
+            {
+                errors.Add("O nome da cliníca ja existe.");
             }
 
             return (errors.Count == 0, errors);
