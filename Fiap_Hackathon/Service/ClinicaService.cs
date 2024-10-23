@@ -16,7 +16,6 @@ namespace Fiap_Hackathon.Service
 
         public async Task<(bool success, List<string> errors)> CadastrarClinica(ClinicaViewModel clinicaViewModel)
         {
-            // Validação do usuário
             var (isValid, validationErrors) = await _validationService.ValidateClinica(clinicaViewModel);
             if (!isValid)
             {

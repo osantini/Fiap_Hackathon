@@ -14,7 +14,17 @@
         <form method="post" asp-action="AgendarConsulta" class="form-content">
             <div class="form-group">
                 <label for="dataConsulta">Data da Consulta</label>
-                <input type="date" id="dataConsulta" class="form-control" name="DataConsulta" required />
+                <input type="date" id="data" class="form-control" name="data" required />
+            </div>
+
+            <div class="form-group">
+                <label for="horaConsulta">Hora da Consulta</label>
+                <input type="time" id="horaConsulta" class="form-control" name="HoraConsulta" required />
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                @Html.TextBoxFor(m => m.Email, new { @type = "email", @class = "form-control", @placeholder = "Digite seu e-mail" })
             </div>
 
             <div class="form-group">
@@ -34,6 +44,17 @@
                     @foreach (var clinica in Model.ClinicasDisponiveis)
                     {
                         <option value="@clinica.Id">@clinica.Nome_Clinica</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="medico">Medico</label>
+                <select id="medico" class="form-control" name="MedicoId" required>
+                    <option value="">Selecione um Médico</option>
+                    @foreach (var medico in Model.MedicosDisponiveis)
+                    {
+                        <option value="@medico.Id">@medico.Nome</option>
                     }
                 </select>
             </div>

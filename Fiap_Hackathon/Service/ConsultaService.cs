@@ -6,26 +6,36 @@ namespace Fiap_Hackathon.Service
     public class ConsultaService
     {
         private readonly ApplicationDbContext _context;
+        private readonly ValidationService _validationService;
 
-        public ConsultaService(ApplicationDbContext context)
+        public ConsultaService(ApplicationDbContext context, ValidationService validationService)
         {
             _context = context;
+            _validationService = validationService;
         }
 
-        public bool AgendarConsulta(Consulta consulta, out string mensagemErro)
+        public async Task<(bool success, List<string> errors)> AgendarConsulta(AgendarConsultaViewModel consultaViewModel)
         {
-            try
+            var (isValid, validationErrors) = await _validationService.ValidateConsulta(consultaViewModel);
+            if (!isValid)
             {
-                _context.Consultas.Add(consulta);
-                _context.SaveChanges();
-                mensagemErro = string.Empty;
-                return true;
+                return (false, validationErrors);
             }
-            catch (Exception ex)
+
+            var consulta = new Consulta
             {
-                mensagemErro = ex.Message;
-                return false;
-            }
+                Data_Consulta = consultaViewModel.Data,
+                Procedimento = consultaViewModel.Procedimento,
+                Id_Usuario = consultaViewModel.Paciente,
+                Id_Medico = consultaViewModel.MedicoId,
+                Id_Clinica = consultaViewModel.ClinicaId,
+                Status = 1
+            };
+
+            _context.Consultas.Add(consulta);
+            await _context.SaveChangesAsync();
+
+            return (true, new List<string>());
         }
 
         public List<Consulta> ObterConsultasPorPaciente(int pacienteId)
@@ -39,6 +49,20 @@ namespace Fiap_Hackathon.Service
         {
             return _context.Consultas
                            .Where(c => c.Id_Medico == medicoId)
+                           .ToList();
+        }
+
+        public List<Medico> ObterMedicos()
+        {
+            return _context.Usuarios
+                           .Where(u => u.CRM != null)
+                           .Select(u => new Medico
+                           {
+                               Id = u.Id,
+                               Nome = u.Nome,
+                               CRM = u.CRM,
+                               Email = u.Email
+                           })
                            .ToList();
         }
     }

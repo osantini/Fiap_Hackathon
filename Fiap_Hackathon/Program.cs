@@ -22,6 +22,13 @@ builder.Services.AddScoped<CadastroRepository>();
 // Outras configurações...
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Tempo de expiração da sessão
+    options.Cookie.HttpOnly = true; // Acessível apenas pelo servidor
+    options.Cookie.IsEssential = true; // Necessário para cookies sem consentimento
+});
+
 var app = builder.Build();
 
 // Configurações do pipeline da aplicação
@@ -33,7 +40,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseSession(); 
 app.UseRouting();
 
 app.UseAuthorization();

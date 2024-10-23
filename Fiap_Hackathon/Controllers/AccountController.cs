@@ -29,6 +29,10 @@ public class AccountController : Controller
     {
         var (success, errorMessage, usuario) = await _loginService.LoginAsync(email, password);
 
+        // Armazenar o e-mail na TempData ou Session
+        TempData["EmailUsuarioLogado"] = usuario.Email;
+        HttpContext.Session.SetString("EmailUsuarioLogado", usuario.Email);
+
         if (success)
         {
             if (usuario.Tipo == 1)

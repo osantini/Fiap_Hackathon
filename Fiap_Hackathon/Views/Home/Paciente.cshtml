@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<Fiap_Hackathon.Models.ConsultaViewModel>
 
+@{
+    var successMessage = TempData["SuccessMessage"] as string;
+}
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -11,6 +15,15 @@
 <body>
     <div class="login-container">
         <h1>Consultas Agendadas</h1>
+
+        @if (!string.IsNullOrEmpty(successMessage))
+        {
+            <script>
+                window.onload = function () {
+                    alert("@successMessage");
+                };
+            </script>
+        }
 
         <div class="new-consulta">
             <a href="@Url.Action("AgendarConsulta", "Consulta")" class="btn-login">Agendar Nova Consulta</a>
@@ -35,7 +48,7 @@
                             <td>@consulta.Data.ToString("dd/MM/yyyy")</td>
                             <td>@consulta.Local</td>
                             <td>@consulta.Procedimento</td>
-                            <td>@consulta.Medico</td>
+                            <td>@consulta.MedicoId</td>
                             <td>
                                 <a href="@Url.Action("CancelarConsulta", "Paciente", new { id = consulta.Id })" class="btn-acao">Cancelar</a>
                                 <a href="@Url.Action("ReagendarConsulta", "Paciente", new { id = consulta.Id })" class="btn-acao">Reagendar</a>

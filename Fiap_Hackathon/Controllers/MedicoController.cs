@@ -15,8 +15,8 @@ public class MedicoController : Controller
         // Simulação de dados para consultas agendadas
         return new List<ConsultaViewModel>
         {
-            new ConsultaViewModel { Id = 1, Data = DateTime.Now.AddDays(1), Paciente = "Maria Silva", Local = "Clínica X", Procedimento = "Consulta de rotina" },
-            new ConsultaViewModel { Id = 2, Data = DateTime.Now.AddDays(3), Paciente = "João Pereira", Local = "Hospital Y", Procedimento = "Exame de sangue" }
+            new ConsultaViewModel { Id = 1, Data = DateTime.Now.AddDays(1), Paciente = 1, Local = "Clínica X", Procedimento = "Consulta de rotina" },
+            new ConsultaViewModel { Id = 2, Data = DateTime.Now.AddDays(3), Paciente = 2, Local = "Hospital Y", Procedimento = "Exame de sangue" }
         };
     }
 }

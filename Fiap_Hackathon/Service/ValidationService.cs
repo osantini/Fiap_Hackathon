@@ -34,6 +34,13 @@ namespace Fiap_Hackathon.Service
             return await _context.Clinicas.AnyAsync(u => u.Nome_Clinica == nome);
         }
 
+        public async Task<bool> ConsultaConflitanteAsync(DateTime data, int medico, int paciente)
+        {
+            return await _context.Consultas.AnyAsync(c =>
+                c.Data_Consulta == data &&
+                (c.Id_Medico == medico || c.Id_Usuario == paciente));
+        }
+
         // Método para validação geral de cadastro (pode incluir mais regras conforme necessário)
         public async Task<(bool isValid, List<string> errors)> ValidateUser(UsuarioViewModel usuario)
         {
@@ -76,6 +83,19 @@ namespace Fiap_Hackathon.Service
             if (await IsNameInUse(clinica.Nome))
             {
                 errors.Add("O nome da cliníca ja existe.");
+            }
+
+            return (errors.Count == 0, errors);
+        }
+
+        public async Task<(bool isValid, List<string> errors)> ValidateConsulta(AgendarConsultaViewModel consulta)
+        {
+            var errors = new List<string>();
+
+            // Verifica se o email já está em uso
+            if (await ConsultaConflitanteAsync(consulta.Data, consulta.MedicoId, consulta.Paciente))
+            {
+                errors.Add("Já existe uma consulta marcada para o mesmo dia e horário.");
             }
 
             return (errors.Count == 0, errors);
