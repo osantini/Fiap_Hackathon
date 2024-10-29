@@ -62,7 +62,7 @@ namespace Fiap_Hackathon.Controllers
             if (success)
             {
                 TempData["SuccessMessage"] = "Consulta Agendada com sucesso!";
-                return RedirectToAction("Paciente", "Home");
+                return RedirectToAction("Paciente", "Paciente");
             }
             else
             {

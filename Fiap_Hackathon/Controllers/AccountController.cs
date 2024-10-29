@@ -29,7 +29,6 @@ public class AccountController : Controller
     {
         var (success, errorMessage, usuario) = await _loginService.LoginAsync(email, password);
 
-        // Armazenar o e-mail na TempData ou Session
         TempData["EmailUsuarioLogado"] = usuario.Email;
         HttpContext.Session.SetString("EmailUsuarioLogado", usuario.Email);
 
@@ -37,11 +36,11 @@ public class AccountController : Controller
         {
             if (usuario.Tipo == 1)
             {
-                return RedirectToAction("Medico", "Home");
+                return RedirectToAction("Medico", "Medico");
             }
             else if (usuario.Tipo == 0)
             {
-                return RedirectToAction("Paciente", "Home");
+                return RedirectToAction("Paciente", "Paciente");
             }
         }
         else

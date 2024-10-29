@@ -1,13 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Fiap_Hackathon.Models;
+using Microsoft.EntityFrameworkCore;
+using Fiap_Hackathon.Service;
+using Fiap_Hackathon.Context;
 
 public class PacienteController : Controller
 {
-    [HttpGet]
-    public ActionResult HomePaciente()
+    private readonly ApplicationDbContext _context;
+    private readonly ConsultaService _consultaService;
+    private readonly ClinicaService _clinicaService;
+
+    public PacienteController(ConsultaService consultaService, ApplicationDbContext context, ClinicaService clinicaService)
     {
-        var consultas = GetConsultasAgendadas(); // Função fictícia para obter as consultas
-        return View(consultas);
+        _consultaService = consultaService;
+        _context = context;
+        _clinicaService = clinicaService;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Paciente()
+    {
+        var consultas = await GetConsultasAgendadas(); 
+        return View(consultas); 
     }
 
     [HttpGet]
@@ -18,26 +32,111 @@ public class PacienteController : Controller
     }
 
     [HttpGet]
-    public ActionResult CancelarConsulta(int id)
+    public async Task<IActionResult> CancelarConsulta(int id)
     {
-        // Lógica para cancelar a consulta
-        return RedirectToAction("HomePaciente");
-    }
+        var success = await _consultaService.CancelarConsulta(id);
 
-    [HttpGet]
-    public ActionResult ReagendarConsulta(int id)
-    {
-        // Lógica para reagendar a consulta
-        return View();
-    }
-
-    private IEnumerable<ConsultaViewModel> GetConsultasAgendadas()
-    {
-        // Simulação de dados
-        return new List<ConsultaViewModel>
+        if (success)
         {
-            new ConsultaViewModel { Id = 1, Data = DateTime.Now.AddDays(3), Local = "Clínica X", Procedimento = "Consulta de rotina", Medico = "Dr. João" },
-            new ConsultaViewModel { Id = 2, Data = DateTime.Now.AddDays(7), Local = "Hospital Y", Procedimento = "Exame de sangue", Medico = "Dra. Maria" }
+            TempData["SuccessMessage"] = "Consulta cancelada com sucesso!";
+        }
+        else
+        {
+            TempData["ErrorMessage"] = "Não foi possível cancelar a consulta.";
+        }
+
+        return RedirectToAction("Paciente"); 
+    }
+
+    public async Task<IActionResult> ReagendarConsulta(int id)
+    {
+        var consulta = await _consultaService.ObterConsultaPorId(id);
+        if (consulta == null)
+        {
+            TempData["ErrorMessage"] = "Consulta não encontrada.";
+            return RedirectToAction("Paciente");
+        }
+
+        var viewModel = new ReagendarConsultaViewModel
+        {
+            Id = consulta.Id,
+            DataAtual = consulta.Data_Consulta,
+            ClinicaId = consulta.Id_Clinica,
+            MedicoId = consulta.Id_Medico,
+            ClinicasDisponiveis = _clinicaService.ObterTodasClinicas(),
+            MedicosDisponiveis =  _consultaService.ObterMedicos(),
         };
+
+        return View(viewModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ReagendarConsulta(ReagendarConsultaViewModel viewModel)
+    {
+        var emailLogado = TempData["EmailUsuarioLogado"] as string ?? HttpContext.Session.GetString("EmailUsuarioLogado");
+
+        if (string.IsNullOrEmpty(emailLogado))
+        {
+            TempData["ErrorMessage"] = "Usuário não está logado.";
+        }
+
+        DateTime dataHoraConsulta = viewModel.Data.Add(viewModel.HoraConsulta);
+        viewModel.Data = dataHoraConsulta;
+
+        var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == emailLogado);
+
+        if (!ModelState.IsValid)
+        {
+            viewModel.ClinicasDisponiveis = _clinicaService.ObterTodasClinicas();
+            viewModel.MedicosDisponiveis = _consultaService.ObterMedicos();
+            return View(viewModel);
+        }
+
+        var success = await _consultaService.ReagendarConsulta(viewModel);
+
+        if (success)
+        {
+            TempData["SuccessMessage"] = "Consulta reagendada com sucesso!";
+            if(usuario.Especialidade != null)
+            {
+                return RedirectToAction("Medico", "Medico");
+            }
+            return RedirectToAction("Paciente");
+        }
+
+        TempData["ErrorMessage"] = "Não foi possível reagendar a consulta.";
+        return View(viewModel);
+    }
+
+    private async Task<IEnumerable<ConsultaViewModel>> GetConsultasAgendadas()
+    {
+        var emailLogado = TempData["EmailUsuarioLogado"] as string ?? HttpContext.Session.GetString("EmailUsuarioLogado");
+
+        if (string.IsNullOrEmpty(emailLogado))
+        {
+            TempData["ErrorMessage"] = "Usuário não está logado.";
+            return Enumerable.Empty<ConsultaViewModel>(); 
+        }
+
+        var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == emailLogado);
+
+        if (usuario == null)
+        {
+            TempData["ErrorMessage"] = "Usuário não encontrado.";
+            return Enumerable.Empty<ConsultaViewModel>(); 
+        }
+
+        var consultas = _consultaService.ObterConsultasPorPaciente(usuario.Id);
+
+        var consultaViewModels = consultas.Select(c => new ConsultaViewModel
+        {
+            Id = c.Id,
+            Data = c.Data_Consulta,
+            Local = _clinicaService.ObterClinicaPorId(c.Id_Clinica),
+            Procedimento = c.Procedimento,
+            NomeMedico = _consultaService.ObterUsuarioPorId(c.Id_Medico),
+        });
+
+        return consultaViewModels;
     }
 }

@@ -22,7 +22,6 @@ namespace Fiap_Hackathon.Service
                 return (false, validationErrors);
             }
 
-            // Se a validação for bem-sucedida, continuar com o cadastro
             var clinica = new Clinica
             {
                 Nome_Clinica = clinicaViewModel.Nome,
@@ -41,6 +40,14 @@ namespace Fiap_Hackathon.Service
         public List<Clinica> ObterTodasClinicas()
         {
             return _context.Clinicas.ToList();
+        }
+
+        public string ObterClinicaPorId(int Id)
+        {
+            return _context.Clinicas
+                   .Where(c => c.Id == Id)
+                   .Select(c => c.Nome_Clinica)
+                   .FirstOrDefault();
         }
     }
 }

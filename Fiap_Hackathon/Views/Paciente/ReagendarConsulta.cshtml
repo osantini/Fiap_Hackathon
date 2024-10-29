@@ -1,0 +1,58 @@
+﻿@model Fiap_Hackathon.Models.ReagendarConsultaViewModel
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Reagendar Consulta</title>
+    <link rel="stylesheet" href="~/css/geral.css">
+</head>
+<body>
+    <div class="login-container">
+        <h1>Reagendar Consulta</h1>
+
+        <form method="post" asp-action="ReagendarConsulta" class="form-content">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <label for="dataAtual">Data Atual</label>
+                <span>@Model.DataAtual.ToShortDateString()</span>
+            </div>
+
+            <div class="form-group">
+                <label for="novaData">Nova Data</label>
+                <input type="date" id="data" class="form-control" name="data" required />
+            </div>
+
+            <div class="form-group">
+                <label for="novaHora">Nova Hora</label>
+                <input type="time" id="horaConsulta" class="form-control" name="HoraConsulta" required />
+            </div>
+
+            <div class="form-group">
+                <label for="clinica">Clínica</label>
+                <select asp-for="ClinicaId" class="form-control" required>
+                    <option value="">Selecione uma clínica</option>
+                    @foreach (var clinica in Model.ClinicasDisponiveis)
+                    {
+                        <option value="@clinica.Id">@clinica.Nome_Clinica</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="medico">Médico</label>
+                <select asp-for="MedicoId" class="form-control" required>
+                    <option value="">Selecione um Médico</option>
+                    @foreach (var medico in Model.MedicosDisponiveis)
+                    {
+                        <option value="@medico.Id">@medico.Nome</option>
+                    }
+                </select>
+            </div>
+
+            <button type="submit" class="btn-login">Reagendar</button>
+        </form>
+    </div>
+</body>
+</html>

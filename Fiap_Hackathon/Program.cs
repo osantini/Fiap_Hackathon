@@ -16,6 +16,9 @@ builder.Services.AddScoped<ValidationService>();
 builder.Services.AddScoped<LoginService>();
 builder.Services.AddScoped<ClinicaService>();
 builder.Services.AddScoped<ConsultaService>();
+builder.Services.AddScoped<ConsultaService>();
+builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<NotificacaoConsultaJob>();
 
 builder.Services.AddScoped<CadastroRepository>();
 

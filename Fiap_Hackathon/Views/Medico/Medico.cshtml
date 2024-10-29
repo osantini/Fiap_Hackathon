@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Fiap_Hackathon.Models.ConsultaViewModel>
+
+@{
+    var successMessage = TempData["SuccessMessage"] as string;
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Médico - Sistema Hackathon</title>
+    <link href="~/css/geral.css" rel="stylesheet" /> <!-- Usando o mesmo CSS para manter o estilo -->
+</head>
+<body>
+    <div class="agenda-container">
+        <h1>Consultas Agendadas</h1>
+
+        @if (!string.IsNullOrEmpty(successMessage))
+        {
+            <script>
+                window.onload = function () {
+                    alert("@successMessage");
+                };
+            </script>
+        }
+
+        <div class="agenda-container">
+            <div class="new-clinica">
+                <a href="@Url.Action("CadastrarClinica", "Clinica")" class="btn-login">Cadastrar Nova Clinica</a>
+            </div>
+
+            @if (Model != null && Model.Any())
+            {
+                <table class="consulta-grid">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Hora</th>
+                            <th>Paciente</th>
+                            <th>Local</th>
+                            <th>Procedimento</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var consulta in Model)
+                        {
+                            <tr>
+                                <td>@consulta.Data.ToString("dd/MM/yyyy")</td>
+                                <td>@consulta.Data.ToString("HH:mm")</td>
+                                <td>@consulta.Paciente</td>
+                                <td>@consulta.Local</td>
+                                <td>@consulta.Procedimento</td>
+                                <td>
+                                    <a href="@Url.Action("CancelarConsulta", "Paciente", new { id = consulta.Id })" class="btn-acao">Cancelar</a>
+                                    <a href="@Url.Action("ReagendarConsulta", "Paciente", new { id = consulta.Id })" class="btn-acao">Reagendar</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>Nenhuma consulta agendada.</p>
+            }
+        </div>
+    </div>
+</body>
+</html>

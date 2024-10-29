@@ -7,8 +7,9 @@
         public TimeSpan HoraConsulta { get; set; }
         public string Local { get; set; }
         public string Procedimento { get; set; }
-        public int MedicoId { get; set; }
-        public int Paciente { get; set; }
+        public int Medico { get; set; }
+        public string NomeMedico { get; set; }
+        public string Paciente { get; set; }
         public int ClinicaId { get; set; }
     }
 }

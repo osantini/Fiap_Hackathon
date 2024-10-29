@@ -18,43 +18,6 @@ namespace Fiap_Hackathon.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public ActionResult Paciente()
-        {
-            var consultas = ConsultasAgendadas(); // Função fictícia para obter as consultas
-            return View(consultas);
-        }
-
-        public async Task<IActionResult> ConsultasAgendadas()
-        {
-            var emailLogado = TempData["EmailUsuarioLogado"] as string ?? HttpContext.Session.GetString("EmailUsuarioLogado");
-
-            if (string.IsNullOrEmpty(emailLogado))
-            {
-                TempData["ErrorMessage"] = "Usuário não está logado.";
-                return RedirectToAction("Login", "Account");
-            }
-
-            // Buscar o usuário pelo e-mail
-            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == emailLogado);
-
-            if (usuario == null)
-            {
-                TempData["ErrorMessage"] = "Usuário não encontrado.";
-                return RedirectToAction("Login", "Account");
-            }
-
-            // Buscar consultas para o usuário
-            var consultas = _consultaService.ObterConsultasPorPaciente(usuario.Id);
-            return View(consultas);
-        }
-
-        [HttpGet]
-        public IActionResult Medico()
-        {
-            return View();
-        }
-
         private readonly ILogger<HomeController> _logger;
 
         public IActionResult Index()

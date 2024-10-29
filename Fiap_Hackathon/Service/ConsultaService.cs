@@ -1,5 +1,6 @@
 ﻿using Fiap_Hackathon.Context;
 using Fiap_Hackathon.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Fiap_Hackathon.Service
 {
@@ -38,6 +39,41 @@ namespace Fiap_Hackathon.Service
             return (true, new List<string>());
         }
 
+        public async Task<bool> CancelarConsulta(int consultaId)
+        {
+            var consulta = await _context.Consultas.FindAsync(consultaId);
+
+            if (consulta == null)
+            {
+                return false; 
+            }
+
+            _context.Consultas.Remove(consulta); 
+            await _context.SaveChangesAsync(); 
+
+            return true; 
+        }
+
+        public async Task<Consulta> ObterConsultaPorId(int consultaId)
+        {
+            return await _context.Consultas.FindAsync(consultaId);
+        }
+
+        public async Task<bool> ReagendarConsulta(ReagendarConsultaViewModel viewModel)
+        {
+            var consulta = await _context.Consultas.FindAsync(viewModel.Id);
+            if (consulta == null)
+            {
+                return false; 
+            }
+
+            consulta.Data_Consulta = viewModel.Data;
+
+            await _context.SaveChangesAsync(); 
+
+            return true; 
+        }
+
         public List<Consulta> ObterConsultasPorPaciente(int pacienteId)
         {
             return _context.Consultas
@@ -52,6 +88,14 @@ namespace Fiap_Hackathon.Service
                            .ToList();
         }
 
+        public string ObterUsuarioPorId(int Id)
+        {
+            return _context.Usuarios
+                   .Where(c => c.Id == Id)
+                   .Select(c => c.Nome)
+                   .FirstOrDefault(); 
+        }
+
         public List<Medico> ObterMedicos()
         {
             return _context.Usuarios
@@ -64,6 +108,26 @@ namespace Fiap_Hackathon.Service
                                Email = u.Email
                            })
                            .ToList();
+        }
+
+        public List<Consulta> ObterConsultasParaAmanha()
+        {
+            var amanha = DateTime.Now.Date.AddDays(1);
+            return _context.Consultas
+                           .Where(c => c.Data_Consulta == amanha)
+                           .ToList();
+        }
+
+        public UsuarioDTO ObterNomeEmailPorId(int id)
+        {
+            return _context.Usuarios
+                   .Where(c => c.Id == id)
+                   .Select(c => new UsuarioDTO
+                   {
+                       Nome = c.Nome,
+                       Email = c.Email
+                   })
+                   .FirstOrDefault();
         }
     }
 }
