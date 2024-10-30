@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  fiap_hackathon:
+    image: fiap_hackathon
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db;Database=FiapHackathon;User Id=sa;Password=Your_password123;
+  
+  db:
+    image: mcr.microsoft.com/mssql/server
+    ports:
+      - "1433:1433"
+    environment:
+      - SA_PASSWORD=Your_password123
+      - ACCEPT_EULA=Y
