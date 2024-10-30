@@ -69,7 +69,7 @@ public class AccountController : Controller
 
         if (success)
         {
-            TempData["SuccessMessage"] = "Cadastro realizado com sucesso! Faça login para continuar.";
+            TempData["successMessage"] = "Cadastro realizado com sucesso! Faca login para continuar.";
             return RedirectToAction("Login");
         }
         else

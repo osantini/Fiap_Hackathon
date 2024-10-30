@@ -1,5 +1,10 @@
 ﻿@model Fiap_Hackathon.Models.LoginViewModel
 
+@{
+    var successMessage = TempData["SuccessMessage"] as string;
+}
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -12,11 +17,13 @@
     <div class="login-container">
         <h1>Sistema Hackathon</h1>
 
-        @if (ViewBag.SuccessMessage != null)
+        @if (!string.IsNullOrEmpty(successMessage))
         {
-            <div class="alert alert-success">
-                @ViewBag.SuccessMessage
-            </div>
+            <script>
+                window.onload = function () {
+                    alert("@successMessage");
+                };
+            </script>
         }
 
         @using (Html.BeginForm("Login", "Account", FormMethod.Post))
