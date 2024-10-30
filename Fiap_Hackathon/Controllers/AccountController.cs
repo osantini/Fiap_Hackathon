@@ -29,6 +29,12 @@ public class AccountController : Controller
     {
         var (success, errorMessage, usuario) = await _loginService.LoginAsync(email, password);
 
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            TempData["ErrorMessage"] = errorMessage;
+            return RedirectToAction("Login");
+        }
+
         TempData["EmailUsuarioLogado"] = usuario.Email;
         HttpContext.Session.SetString("EmailUsuarioLogado", usuario.Email);
 

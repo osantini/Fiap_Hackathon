@@ -2,6 +2,7 @@
 
 @{
     var successMessage = TempData["SuccessMessage"] as string;
+    var errorMessage = TempData["errorMessage"] as string;
 }
 
 
@@ -22,6 +23,15 @@
             <script>
                 window.onload = function () {
                     alert("@successMessage");
+                };
+            </script>
+        }
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <script>
+                window.onload = function () {
+                    alert("@errorMessage");
                 };
             </script>
         }

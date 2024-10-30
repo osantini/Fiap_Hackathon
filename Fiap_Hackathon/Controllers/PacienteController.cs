@@ -34,15 +34,25 @@ public class PacienteController : Controller
     [HttpGet]
     public async Task<IActionResult> CancelarConsulta(int id)
     {
+        var emailLogado = TempData["EmailUsuarioLogado"] as string ?? HttpContext.Session.GetString("EmailUsuarioLogado");
+
+        if (string.IsNullOrEmpty(emailLogado))
+        {
+            TempData["ErrorMessage"] = "Usuário não está logado.";
+        }
+
+        var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == emailLogado);
+
         var success = await _consultaService.CancelarConsulta(id);
 
         if (success)
         {
-            TempData["SuccessMessage"] = "Consulta cancelada com sucesso!";
-        }
-        else
-        {
-            TempData["ErrorMessage"] = "Não foi possível cancelar a consulta.";
+            TempData["SuccessMessage"] = "Consulta reagendada com sucesso!";
+            if (usuario.Especialidade != null)
+            {
+                return RedirectToAction("Medico", "Medico");
+            }
+            return RedirectToAction("Paciente");
         }
 
         return RedirectToAction("Paciente"); 

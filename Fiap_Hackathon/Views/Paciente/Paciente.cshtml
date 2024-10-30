@@ -16,6 +16,8 @@
     <div class="agenda-container">
         <h1>Consultas Agendadas</h1>
 
+        <a href="@Url.Action("Login", "Account")" class="btn-acao">Voltar para Login</a>
+
         @if (!string.IsNullOrEmpty(successMessage))
         {
             <script>
